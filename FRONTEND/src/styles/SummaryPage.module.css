@@ -1,0 +1,578 @@
+/* General Container */
+.container {
+  padding-top: 80px;
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #e0f7fa,
+    #b2ebf2
+  ); /* Gradient pastel nhẹ nhàng */
+  font-family: "Comic Sans MS", sans-serif;
+  color: #333;
+  contain: layout;
+}
+
+/* Main Content */
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 20px;
+}
+
+/* Header Container */
+.headerContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1400px;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Illustration Section (Ẩn) */
+.illustration {
+  display: none; /* Ẩn hình ảnh Cá heo và Mèo */
+}
+
+/* Option Column (chứa chọn kiểu tóm tắt và lớp học) */
+.optionColumn {
+  width: 100%;
+  background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 2px dashed #4fc3f7;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.optionSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.optionTitle {
+  font-size: 18px;
+  color: #0288d1;
+  margin-bottom: 10px;
+  text-align: center;
+  animation: bounce 1s infinite;
+}
+
+.optionGroup {
+  display: flex;
+  flex-direction: row; /* Nằm ngang */
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.optionButton {
+  background: linear-gradient(
+    45deg,
+    #81d4fa,
+    #b3e5fc
+  ); /* Màu nền mặc định nhẹ nhàng */
+  border: 2px solid #0288d1;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  color: #333;
+  min-width: 100px;
+  text-align: center;
+  justify-content: center;
+}
+
+.optionButton:hover {
+  background: linear-gradient(45deg, #ffeb3b, #fff176); /* Màu hover sáng hơn */
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  animation: blink 0.5s infinite;
+}
+
+.optionButton.active {
+  background: linear-gradient(
+    45deg,
+    #1e90ff,
+    #4682b4
+  ); /* Màu highlight chung (xanh đậm) */
+  border: 2px solid #ffeb3b;
+  box-shadow: 0 4px 8px rgba(255, 235, 59, 0.5);
+  color: #fff; /* Chuyển chữ thành trắng để nổi bật */
+  font-weight: bold; /* Làm đậm chữ */
+}
+
+.optionButton[data-tooltip]:hover:after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0288d1;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+  margin-bottom: 5px;
+  animation: popUp 0.5s ease-out;
+}
+
+/* Specific Colors for Buttons (giữ màu nền mặc định, bỏ màu active riêng) */
+.methodExtract {
+  background: linear-gradient(45deg, #81d4fa, #b3e5fc);
+}
+
+.methodParaphrase {
+  background: linear-gradient(45deg, #a5d6a7, #c8e6c9);
+}
+
+.grade1 {
+  background: linear-gradient(45deg, #b3e5fc, #81d4fa);
+}
+
+.grade2 {
+  background: linear-gradient(45deg, #fff59d, #fff9c4);
+}
+
+.grade3 {
+  background: linear-gradient(45deg, #ffccbc, #ffab91);
+}
+
+.grade4 {
+  background: linear-gradient(45deg, #d1c4e9, #ede7f6);
+}
+
+.grade5 {
+  background: linear-gradient(45deg, #c8e6c9, #a5d6a7);
+}
+
+/* Input and Result Section */
+.inputResultSection {
+  display: flex;
+  width: 100%;
+  max-width: 1400px;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Input and Result Container */
+.inputResultContainer {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  flex: 1;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+/* Text Input Container */
+.textInputContainer {
+  flex: 1;
+  background: linear-gradient(135deg, #ffffff, #e0f7fa);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 2px dashed #4fc3f7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  position: relative;
+}
+
+.inputWrapper {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.textInputArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  color: #0288d1;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.textArea {
+  width: 100%;
+  height: 200px;
+  border-radius: 15px;
+  padding: 15px;
+  font-size: 16px;
+  border: 2px solid #0288d1;
+  background: white;
+  resize: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.textArea:focus {
+  border-color: #ffeb3b;
+  box-shadow: 0 0 10px rgba(255, 235, 59, 0.5);
+  outline: none;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px; /* Đặt phía dưới textArea */
+  width: 100%;
+  justify-content: center;
+}
+
+.buttonGroup {
+  display: none; /* Ẩn buttonGroup vì buttonRow đã xử lý */
+}
+
+/* Submit Button */
+.submitButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(45deg, #0288d1, #4fc3f7);
+  border-radius: 20px;
+  border: none;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.submitButton:hover {
+  background: linear-gradient(45deg, #ffeb3b, #fff176);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.submitButton:disabled {
+  background: #b0c4de;
+  cursor: not-allowed;
+}
+
+/* Upload Button */
+.uploadButton {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: white;
+  background: linear-gradient(45deg, #81d4fa, #b3e5fc);
+  border-radius: 20px;
+  border: none;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.uploadButton:hover {
+  background: linear-gradient(45deg, #ffeb3b, #fff176);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* File Input (Hidden) */
+.fileInput {
+  display: none;
+}
+
+/* Reset Button */
+.resetButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #0288d1;
+  background: linear-gradient(45deg, #ffeb3b, #fff9c4);
+  border-radius: 20px;
+  border: none;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.resetButton:hover {
+  background: linear-gradient(45deg, #a5d6a7, #c8e6c9);
+  color: white;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Generate Image Button */
+.generateImageButton {
+  padding: 8px 15px;
+  font-size: 14px;
+  color: white;
+  background: linear-gradient(45deg, #4fc3f7, #81d4fa);
+  border-radius: 20px;
+  border: none;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+}
+
+.generateImageButton:hover {
+  background: linear-gradient(45deg, #ffeb3b, #fff176);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Result Section */
+.resultContainer {
+  flex: 1;
+  background: linear-gradient(135deg, #ffffff, #e0f7fa);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 2px dashed #4fc3f7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.resultBox {
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  border: 2px solid #0288d1;
+  min-height: 200px;
+  width: 100%;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.resultText {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+  text-align: left;
+}
+
+/* Evaluation Section */
+.evaluationSection {
+  width: 100%;
+  background: linear-gradient(135deg, #ffffff, #e0f7fa);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 2px dashed #4fc3f7;
+  margin-top: 20px;
+}
+
+.evaluationTitle {
+  font-size: 24px;
+  color: #0288d1;
+  text-align: center;
+  margin-bottom: 20px;
+  animation: bounce 1s infinite;
+}
+
+.evaluationContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.evaluationItem {
+  flex: 1;
+  min-width: 300px;
+  height: 300px;
+  background: #e0f7fa;
+  border: 2px dashed #0288d1;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #0288d1;
+  font-size: 16px;
+  text-align: center;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.5s ease-in-out;
+}
+
+.evaluationItem.expanded {
+  flex: 4;
+  min-width: 600px;
+  height: 500px;
+  z-index: 10;
+  border: 3px solid #ffeb3b;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.evaluationItem p {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.evaluationItem canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes popUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .headerContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .optionColumn {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .inputResultSection {
+    width: 100%;
+  }
+
+  .inputResultContainer {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .buttonRow {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .inputWrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .textArea,
+  .resultBox {
+    height: 200px;
+  }
+
+  .optionGroup {
+    flex-direction: column;
+  }
+
+  .evaluationSection {
+    width: 100%;
+  }
+
+  .evaluationContainer {
+    flex-direction: column;
+  }
+
+  .evaluationItem {
+    min-width: 100%;
+    height: 250px;
+  }
+
+  .evaluationItem.expanded {
+    min-width: 100%;
+    height: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .textInputContainer,
+  .resultContainer {
+    width: 100%;
+  }
+
+  .textArea,
+  .resultBox {
+    height: 150px;
+  }
+
+  .submitButton,
+  .resetButton,
+  .uploadButton,
+  .generateImageButton {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+  .optionButton {
+    font-size: 12px;
+    padding: 6px 12px;
+    min-width: 80px;
+  }
+
+  .sectionTitle {
+    font-size: 16px;
+  }
+
+  .resultText {
+    font-size: 14px;
+  }
+
+  .optionTitle {
+    font-size: 14px;
+  }
+
+  .evaluationItem {
+    height: 200px;
+  }
+
+  .evaluationItem.expanded {
+    height: 300px;
+  }
+}

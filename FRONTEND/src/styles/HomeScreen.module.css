@@ -1,0 +1,668 @@
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background: #e6f3ff;
+  font-family: "Comic Sans MS", sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  position: relative;
+}
+
+/* Hero Section */
+.heroSection {
+  padding: 50px 20px;
+  background: linear-gradient(
+    to right,
+    rgba(52, 152, 219, 0.7),
+    rgba(37, 118, 172, 0.7)
+  );
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.heroContent {
+  max-width: 100%;
+  position: relative;
+}
+
+.sectionTitle {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  color: #2980b9;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  gap: clamp(20px, 3vw, 40px);
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.exploreButton,
+.summaryButton {
+  width: clamp(250px, 80%, 400px);
+  height: clamp(80px, 15vw, 150px);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 25px;
+  position: relative;
+}
+
+.exploreButton:hover,
+.summaryButton:hover {
+  transform: scale(1.05);
+}
+
+.searchBar {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.searchInput {
+  width: clamp(200px, 80%, 300px);
+  height: 40px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+}
+
+.searchButton {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: #3498db;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.searchButton:hover {
+  transform: scale(1.1);
+}
+
+/* Guide Character (Panda) */
+.guideContainer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  transition: right 1s ease, opacity 0.5s ease;
+  z-index: 100;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.guideCharacter {
+  width: clamp(60px, 10vw, 120px);
+  height: clamp(60px, 10vw, 120px);
+  cursor: pointer;
+}
+
+.guideCharacter.jump {
+  animation: jump 0.5s ease;
+}
+
+.guideCharacter:hover {
+  transform: scale(1.1);
+}
+
+/* Sparkle Effect */
+.sparkleEffect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  opacity: 0;
+  animation: sparkle 2s infinite;
+}
+
+/* Speech Bubble (Cloud Style) */
+.speechBubble {
+  position: absolute;
+  bottom: clamp(80px, calc(10vw + 60px), 140px);
+  right: -30px;
+  max-width: clamp(180px, 50vw, 250px);
+  text-align: center;
+  padding: 15px;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(to bottom, #81d4fa, #42a5f5);
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border: 3px solid #1e88e5;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.speechBubble::after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  right: clamp(40px, 8vw, 80px);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid #ffcccb;
+}
+
+.speechBubble.clicked {
+  animation: clickScale 0.5s ease;
+}
+
+.closeGuide {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #ff5252;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 24px;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.closeGuide:hover {
+  background: #e91e63;
+}
+
+/* Class Section */
+.classSection {
+  padding: clamp(20px, 5vw, 40px);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  margin: 0 clamp(10px, 2vw, 20px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.classList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.classRow {
+  display: flex;
+  justify-content: center;
+  gap: clamp(15px, 3vw, 30px);
+  flex-wrap: wrap;
+}
+
+.classItem {
+  text-align: center;
+  padding: clamp(15px, 2vw, 20px);
+  background: #3498db;
+  border-radius: 15px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  width: clamp(150px, calc(50% - 20px), 200px);
+  position: relative;
+  border: 2px solid #90caf9;
+  overflow: hidden;
+}
+
+.classItem:hover {
+  transform: scale(1.05);
+}
+
+.classItem.selected {
+  background: #e74c3c;
+  border-color: #ffd700;
+}
+
+.classIconWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: clamp(70px, 10vw, 100px);
+  height: clamp(70px, 10vw, 100px);
+  margin: 0 auto 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.classIcon {
+  width: clamp(70px, 10vw, 100px);
+  height: clamp(70px, 10vw, 100px);
+  transition: transform 0.3s ease;
+}
+
+.classItem:hover .classIcon {
+  transform: rotate(10deg);
+}
+
+.classItem span {
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  position: relative;
+  z-index: 1;
+}
+
+/* Carousel Section */
+.carouselSection {
+  padding: clamp(30px, 5vw, 50px) 0;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  margin: 0 clamp(10px, 2vw, 20px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.carouselSection .carousel-item {
+  text-align: center;
+  padding: clamp(15px, 2vw, 20px);
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: clamp(250px, 90%, 300px);
+  margin: 0 auto;
+  border: 2px solid #90caf9;
+  transition: transform 0.3s ease;
+}
+
+.carouselSection .carousel-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.carouselSection .carousel-item h3 {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  color: #1e88e5;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.carouselSection .carousel-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* Learning Tips Section */
+.learningSection {
+  padding: clamp(20px, 5vw, 40px);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  margin: 0 clamp(10px, 2vw, 20px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.tipList {
+  display: flex;
+  justify-content: center;
+  gap: clamp(15px, 3vw, 20px);
+  flex-wrap: wrap;
+}
+
+.tipItem {
+  text-align: center;
+  padding: clamp(15px, 2vw, 20px);
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: clamp(250px, calc(100% - 30px), 300px);
+  position: relative;
+  border: 2px solid #90caf9;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tipItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.tipItem p {
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+  color: #1e88e5;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+  font-weight: bold;
+  position: relative;
+  z-index: 2;
+  line-height: 1.5;
+}
+
+.musicButton {
+  position: fixed;
+  top: clamp(15px, 2vw, 20px);
+  right: clamp(15px, 2vw, 20px);
+  width: clamp(60px, 10vw, 120px);
+  height: clamp(60px, 10vw, 120px);
+  font-family: "Comic Neue", "Patrick Hand", sans-serif;
+  background: linear-gradient(45deg, #0288d1, #4fc3f7, #bbdefb);
+  border: 4px solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 5px;
+}
+
+.musicButton:hover,
+.musicButton.playing {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(79, 195, 247, 0.8);
+  animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 10px rgba(79, 195, 247, 0.6);
+  }
+  100% {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(79, 195, 247, 1);
+  }
+}
+
+.musicButton:active {
+  transform: scale(0.95);
+}
+
+.musicIcon {
+  width: clamp(45px, 8vw, 90px);
+  height: clamp(45px, 8vw, 90px);
+  transition: transform 0.3s ease;
+}
+
+.musicButton:hover .musicIcon {
+  transform: rotate(15deg) scale(1.1);
+}
+
+.musicButton.playing .musicIcon {
+  animation: bounce 0.5s ease infinite;
+}
+
+/* Glowing border effect when music is playing */
+.musicButton.playing::before {
+  content: "";
+  position: absolute;
+  width: clamp(70px, 12vw, 130px);
+  height: clamp(70px, 12vw, 130px);
+  background: rgba(144, 202, 249, 0.3);
+  border-radius: 50%;
+  z-index: -1;
+  animation: pulse 2s infinite;
+}
+
+.musicButton.playing::after {
+  content: "♪";
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  color: #fff;
+  opacity: 0;
+  animation: musicNote 1s infinite;
+}
+
+/* Animations */
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 12px 25px rgba(144, 202, 249, 0.5);
+  }
+  100% {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes musicNote {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-25px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes jump {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px) rotate(10deg);
+  }
+}
+
+@keyframes sparkle {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes clickScale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes slideCloud {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Enhanced Responsive Design */
+/* Small tablets */
+@media (max-width: 991px) {
+  .classRow {
+    gap: 15px;
+  }
+
+  .classItem {
+    width: calc(50% - 15px);
+    max-width: none;
+  }
+
+  .tipItem {
+    width: calc(50% - 15px);
+    max-width: none;
+  }
+}
+
+/* Mobile Landscape */
+@media (max-width: 767px) {
+  .heroSection {
+    padding: 30px 15px;
+  }
+
+  .buttonContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .classItem {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .tipItem {
+    width: 100%;
+    max-width: 250px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+
+  .heroSection {
+    padding: 20px 10px;
+    border-radius: 15px;
+  }
+
+  .sectionTitle {
+    margin-bottom: 15px;
+  }
+
+  .buttonContainer {
+    margin-top: 20px;
+    gap: 15px;
+  }
+
+  .searchBar {
+    margin-top: 15px;
+  }
+
+  .searchInput {
+    height: 35px;
+  }
+
+  .classSection,
+  .carouselSection,
+  .learningSection {
+    padding: 15px;
+    margin: 0 5px;
+    border-radius: 15px;
+  }
+
+  .exploreButton,
+  .summaryButton {
+    height: 60px;
+    border-radius: 15px;
+  }
+
+  .guideContainer {
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .speechBubble {
+    padding: 10px;
+    max-width: 150px;
+  }
+}
