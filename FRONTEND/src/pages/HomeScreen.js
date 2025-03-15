@@ -5,17 +5,24 @@ import SummaryCarousel from "../components/SummaryCarousel";
 import SearchModal from "../components/SearchModal";
 import Lottie from "lottie-react";
 import ReactHowler from "react-howler";
-import explore_button from "../assets/images/button.png";
-import summary_button from "../assets/images/button2.png";
-import pandaAnimation from "../assets/images/animation/Animation - 1741792766942.json";
+import whaleAnimation from "../assets/images/animation/Animation - 1741792766942.json";
 import musicIcon from "../assets/images/pngtree-cute-little-girl-holding-a-megaphone-hand-drawn-cartoon-character-illustration-png-image_11324956-removebg-preview.png";
+import {
+  FaSearch,
+  FaPen,
+  FaBook,
+  FaStar,
+  FaMoon,
+  FaSun,
+  FaShareAlt
+} from "react-icons/fa";
 
-// Import ảnh cục bộ
-import readingKids from "../assets/images/kids-playing.png";
-import slideKids from "../assets/images/kids-playing.png";
-import playBallKids from "../assets/images/kids-playing.png";
-import paintKids from "../assets/images/kids-playing.png";
-import scienceKids from "../assets/images/kids-playing.png";
+// Import ảnh minh họa cho từng lớp
+import class1Mascot from "../assets/images/kids-playing.png";
+import class2Mascot from "../assets/images/kids-playing.png";
+import class3Mascot from "../assets/images/kids-playing.png";
+import class4Mascot from "../assets/images/kids-playing.png";
+import class5Mascot from "../assets/images/kids-playing.png";
 
 // Component an toàn cho ReactHowler
 class SafeReactHowler extends React.Component {
@@ -47,40 +54,45 @@ const readingTips = [
   { id: 3, tip: "Đọc to lên để nhớ lâu hơn nào! 🎙️🎉" }
 ];
 
+// Dữ liệu bài đọc mẫu
 const sampleSummaries = [
   {
     id: 1,
-    image: "https://via.placeholder.com/150/3498db/ffffff?text=Truyện+Cổ+Tích",
+    image:
+      "https://www.vocw.edu.vn/wp-content/uploads/2021/01/Ve-tranh-minh-hoa-truyen-co-tich-lop-8.jpg",
     title: "Truyện Cổ Tích",
     classLevel: 1
   },
   {
     id: 2,
-    image: "https://via.placeholder.com/150/2ecc71/ffffff?text=Bài+Học+Vui",
+    image:
+      "https://cdnphoto.dantri.com.vn/J--UViBTDTpx6QfI4EBgU3A7yJ0=/zoom/1200_630/NxccccccccccccoFBts62NyN5Dzb54/Image/2015/02/sa1-8edd4.jpg",
     title: "Bài Học Vui",
     classLevel: 2
   },
   {
     id: 3,
-    image:
-      "https://via.placeholder.com/150/e74c3c/ffffff?text=Khoa+Học+Dễ+Hiểu",
+    image: "https://live.staticflickr.com/7874/40474155873_8d0ac5580d_z.jpg",
     title: "Khoa Học Dễ Hiểu",
     classLevel: 3
   },
   {
     id: 4,
-    image: "https://via.placeholder.com/150/f1c40f/ffffff?text=Lịch+Sử+Thú+Vị",
+    image:
+      "https://timviec365.vn/pictures/images_03_2021/dinh-tien-hoang%20(1).jpg",
     title: "Lịch Sử Thú Vị",
     classLevel: 4
   },
   {
     id: 5,
-    image: "https://via.placeholder.com/150/9b59b6/ffffff?text=Văn+Học+Bé",
+    image:
+      "https://baovannghe.vn/stores/news_dataimages/2024/122024/20/03/truyen-co-tich-tam-cam-1280x76820241220031136.jpg?rt=20241220031138",
     title: "Văn Học Bé",
     classLevel: 5
   }
 ];
 
+// Dữ liệu lớp học
 const classLevels = [
   {
     id: 1,
@@ -88,7 +100,7 @@ const classLevels = [
     icon: "https://cdn.pixabay.com/photo/2016/04/15/04/19/child-1329499_1280.png",
     accessoryIcon:
       "https://cdn.pixabay.com/photo/2017/08/01/09/06/pencil-2562636_1280.png",
-    mascotIcon: readingKids
+    mascotIcon: class1Mascot
   },
   {
     id: 2,
@@ -96,7 +108,7 @@ const classLevels = [
     icon: "https://cdn.pixabay.com/photo/2016/04/15/04/19/child-1329498_1280.png",
     accessoryIcon:
       "https://cdn.pixabay.com/photo/2017/08/01/09/06/book-2562635_1280.png",
-    mascotIcon: slideKids
+    mascotIcon: class2Mascot
   },
   {
     id: 3,
@@ -104,7 +116,7 @@ const classLevels = [
     icon: "https://cdn.pixabay.com/photo/2016/04/15/04/19/child-1329497_1280.png",
     accessoryIcon:
       "https://cdn.pixabay.com/photo/2017/08/01/09/06/ruler-2562637_1280.png",
-    mascotIcon: playBallKids
+    mascotIcon: class3Mascot
   },
   {
     id: 4,
@@ -112,7 +124,7 @@ const classLevels = [
     icon: "https://cdn.pixabay.com/photo/2016/04/15/04/19/child-1329496_1280.png",
     accessoryIcon:
       "https://cdn.pixabay.com/photo/2017/08/01/09/06/eraser-2562638_1280.png",
-    mascotIcon: paintKids
+    mascotIcon: class4Mascot
   },
   {
     id: 5,
@@ -120,16 +132,17 @@ const classLevels = [
     icon: "https://cdn.pixabay.com/photo/2016/04/15/04/19/child-1329495_1280.png",
     accessoryIcon:
       "https://cdn.pixabay.com/photo/2017/08/01/09/06/notebook-2562639_1280.png",
-    mascotIcon: scienceKids
+    mascotIcon: class5Mascot
   }
 ];
 
+// Tin nhắn hướng dẫn
 const guideMessages = [
-  "Bé ơi, bay vào thế giới sách thần kỳ với chú panda nào! 🚀",
+  "Bé ơi, bay vào thế giới sách thần kỳ nào! 🚀",
   "Bé giỏi lắm, chọn sách đi nào! 😄",
-  "Vào đây chọn sách yêu thích với chú panda nhé! 🐼",
+  "Vào đây chọn sách yêu thích nhé! 🐳",
   "Bé ơi, đọc sách vui lắm, thử xem nào! 🌟",
-  "Chú panda chờ bé tóm tắt sách nè! 🖋️"
+  "Chú cá voi chờ bé tóm tắt sách nè! 🖋️"
 ];
 
 function getRandomMessage() {
@@ -142,24 +155,23 @@ const HomeScreen = () => {
   const [selectedClass, setSelectedClass] = useState(null);
   const [showGuide, setShowGuide] = useState(true);
   const [guideMessage, setGuideMessage] = useState(getRandomMessage());
-  const [penguinPosition, setPenguinPosition] = useState(20);
+  const [whalePosition, setWhalePosition] = useState(20);
   const [playSound, setPlaySound] = useState(false);
   const [jump, setJump] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [playMusic, setPlayMusic] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
-    const movePenguin = setInterval(() => {
-      setPenguinPosition((prev) => (prev === 40 ? 80 : 40));
+    const moveWhale = setInterval(() => {
+      setWhalePosition((prev) => (prev === 40 ? 80 : 40));
     }, 3000);
-    return () => clearInterval(movePenguin);
+    return () => clearInterval(moveWhale);
   }, []);
 
   const handleSearchClick = () => {
     setIsSearchModalOpen(true);
-    setGuideMessage(
-      "Bé ơi, bay vào thế giới sách thần kỳ với chú panda nào! 🚀"
-    );
+    setGuideMessage("Bé ơi, bay vào thế giới sách thần kỳ nào! 🚀");
     setShowGuide(true);
   };
 
@@ -169,7 +181,7 @@ const HomeScreen = () => {
     setSummary(
       `Tóm tắt "${randomItem.title}": Một câu chuyện/bài học thú vị cho bé!`
     );
-    setGuideMessage("Tuyệt vời! Chú panda vỗ tay cho bé nè! 👏");
+    setGuideMessage("Tuyệt vời! Chú cá voi vỗ tay cho bé nè! 👏");
     setShowGuide(true);
   };
 
@@ -178,7 +190,7 @@ const HomeScreen = () => {
     setGuideMessage(
       `Bé chọn ${
         classLevels.find((level) => level.id === classId).name
-      } rồi! Chú panda khen bé giỏi! 🐼`
+      } rồi! Chú cá voi khen bé giỏi! 🐳`
     );
     setShowGuide(true);
   };
@@ -196,39 +208,83 @@ const HomeScreen = () => {
 
   const toggleMusic = () => setPlayMusic(!playMusic);
 
+  const toggleTheme = () => setIsDarkTheme(!isDarkTheme);
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Tóm tắt bài đọc cho bé!",
+          text: "Cùng bé khám phá thế giới sách với ứng dụng tóm tắt siêu nhanh!",
+          url: window.location.href
+        })
+        .catch((error) => console.log("Lỗi khi chia sẻ:", error));
+    } else {
+      alert("Chức năng chia sẻ không được hỗ trợ trên trình duyệt này!");
+    }
+  };
+
   const filteredSummaries = selectedClass
     ? sampleSummaries.filter((item) => item.classLevel === selectedClass)
     : sampleSummaries;
 
   return (
-    <div className={styles.container}>
+    <div
+      className={`${styles.container} ${isDarkTheme ? styles.darkTheme : ""}`}
+    >
       <Header />
       <main className={styles.mainContent}>
         {/* Hero Section */}
         <section className={styles.heroSection}>
           <div className={styles.heroContent}>
             <h2 className={styles.sectionTitle}>
-              Tóm tắt bài đọc siêu nhanh cho bé!
+              <FaBook className={styles.sectionIcon} /> Tóm tắt bài đọc siêu
+              nhanh cho bé!
             </h2>
             <div className={styles.buttonContainer}>
-              <img
-                src={explore_button}
-                alt="Khám phá ngay"
+              <button
                 className={styles.exploreButton}
                 onClick={handleSearchClick}
-              />
-              <img
-                src={summary_button}
-                alt="Tóm tắt tức thì"
+              >
+                <FaSearch className={styles.buttonIcon} /> Khám phá ngay
+              </button>
+              <button
                 className={styles.summaryButton}
                 onClick={handleSummarizeClick}
-              />
+              >
+                <FaPen className={styles.buttonIcon} /> Tóm tắt tức thì
+              </button>
             </div>
             {summary && <p className={styles.summaryText}>{summary}</p>}
           </div>
+          <div className={styles.sparkleEffect}></div>
+          <div className={styles.starEffect}>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <div className={styles.bubbleEffect}>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
         </section>
 
-        {/* Nút bật/tắt nhạc nền với icon */}
+        {/* Nút bật/tắt nhạc nền */}
         <button
           className={`${styles.musicButton} ${playMusic ? styles.playing : ""}`}
           onClick={toggleMusic}
@@ -236,28 +292,28 @@ const HomeScreen = () => {
           <img src={musicIcon} alt="Music" className={styles.musicIcon} />
         </button>
         <SafeReactHowler
-          src="/audio/nhacchillchotre.mp3" // Sử dụng file có sẵn
+          src="/audio/nhacchillchotre.mp3"
           playing={playMusic}
           loop={true}
           volume={0.5}
         />
 
-        {/* Nhân vật hướng dẫn (Chú panda) */}
+        {/* Nhân vật hướng dẫn (Chú cá voi) */}
         {showGuide && (
           <div
             className={styles.guideContainer}
-            style={{ right: `${penguinPosition}px` }}
+            style={{ right: `${whalePosition}px` }}
             onClick={handleGuideClick}
           >
             <SafeReactHowler
-              src="/audio/beoi.mp3" // Sử dụng file có sẵn làm âm thanh nhấp chuột
+              src="/audio/beoi.mp3"
               playing={playSound}
               onEnd={() => setPlaySound(false)}
               volume={0.7}
             />
             <div className={styles.sparkleEffect}></div>
             <Lottie
-              animationData={pandaAnimation}
+              animationData={whaleAnimation}
               className={`${styles.guideCharacter} ${jump ? styles.jump : ""}`}
             />
             <div
@@ -285,8 +341,8 @@ const HomeScreen = () => {
                 <div
                   key={level.id}
                   className={`${styles.classItem} ${
-                    selectedClass === level.id ? styles.selected : ""
-                  }`}
+                    styles[`class${level.id}`]
+                  } ${selectedClass === level.id ? styles.selected : ""}`}
                   onClick={() => handleClassClick(level.id)}
                 >
                   <div className={styles.classIconWrapper}>
@@ -305,8 +361,8 @@ const HomeScreen = () => {
                 <div
                   key={level.id}
                   className={`${styles.classItem} ${
-                    selectedClass === level.id ? styles.selected : ""
-                  }`}
+                    styles[`class${level.id}`]
+                  } ${selectedClass === level.id ? styles.selected : ""}`}
                   onClick={() => handleClassClick(level.id)}
                 >
                   <div className={styles.classIconWrapper}>
@@ -324,18 +380,24 @@ const HomeScreen = () => {
         </section>
 
         {/* Carousel Section */}
-        <h2 className={styles.sectionTitle}>Bài đọc nổi bật</h2>
+        <h2 className={styles.sectionTitle}>
+          <FaStar className={styles.sectionIcon} /> Bài đọc nổi bật
+        </h2>
         <section className={styles.carouselSection}>
           <SummaryCarousel title="" items={filteredSummaries} />
         </section>
 
         {/* Section: Mẹo đọc sách hay */}
-        <h2 className={styles.sectionTitle}>Mẹo đọc sách hay</h2>
+        <h2 className={styles.sectionTitle}>
+          <FaBook className={styles.sectionIcon} /> Mẹo đọc sách hay
+        </h2>
         <section className={styles.learningSection}>
           <div className={styles.tipList}>
             {readingTips.map((tip) => (
               <div key={tip.id} className={styles.tipItem}>
-                <p>{tip.tip}</p>
+                <p>
+                  <FaStar className={styles.tipIcon} /> {tip.tip}
+                </p>
               </div>
             ))}
           </div>
