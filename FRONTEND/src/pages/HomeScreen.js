@@ -292,7 +292,7 @@ const HomeScreen = () => {
           <img src={musicIcon} alt="Music" className={styles.musicIcon} />
         </button>
         <SafeReactHowler
-          src="/audio/nhacchillchotre.mp3"
+          src="/audio/nhacplaytogether.mp3"
           playing={playMusic}
           loop={true}
           volume={0.5}
