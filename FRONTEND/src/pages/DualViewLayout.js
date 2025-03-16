@@ -1,52 +1,130 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import axios from "axios";
+import { motion } from "framer-motion";
+import Modal from "react-modal";
+import {
+  FaSun,
+  FaMoon,
+  FaShareAlt,
+  FaVolumeUp,
+  FaMinus,
+  FaPlus,
+  FaTimes,
+  FaStar,
+  FaPen
+} from "react-icons/fa";
 import styles from "../styles/DualViewLayout.module.css";
 import summaryPicture from "../assets/images/concao.jpeg";
-import axios from "axios";
-import { FaShareAlt, FaMoon, FaSun } from "react-icons/fa";
+
+Modal.setAppElement("#root");
+
+const pageVariants = {
+  hidden: { opacity: 0, x: -50 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }
+};
 
 const DualViewLayout = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
   const [activeView, setActiveView] = useState("text");
   const [summaryMethod, setSummaryMethod] = useState("extract");
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [storyData, setStoryData] = useState({
+    title: "",
     text: "",
     summaryExtract: "",
     summaryParaphrase: ""
   });
   const [loading, setLoading] = useState(false);
-  const [fontSize, setFontSize] = useState(16);
-  const [note, setNote] = useState("");
+  const [fontSize, setFontSize] = useState(18);
   const [progress, setProgress] = useState(0);
-  const [quizAnswer, setQuizAnswer] = useState(null);
+  const [error, setError] = useState(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [voices, setVoices] = useState([]); // Danh sách giọng đọc
+  const [selectedVoiceName, setSelectedVoiceName] = useState("Giọng Nữ"); // Tên giọng được chọn
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", checkMobile);
     checkMobile();
     setIsDarkTheme(localStorage.getItem("theme") === "dark");
-    setNote(localStorage.getItem("note") || "");
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+    setProgress(localStorage.getItem(`progress_${id}`) || 0);
+
+    // Lấy danh sách giọng đọc
+    const loadVoices = () => {
+      const availableVoices = window.speechSynthesis.getVoices();
+      const vietnameseVoices = availableVoices.filter(
+        (voice) => voice.lang === "vi-VN" || voice.lang === "vi"
+      );
+
+      // Tạo danh sách cố định "Giọng Nữ" và "Giọng Nam"
+      const voiceOptions = [
+        { name: "Giọng Nữ", voice: null },
+        { name: "Giọng Nam", voice: null }
+      ];
+
+      // Gán giọng thực tế nếu có
+      vietnameseVoices.forEach((voice) => {
+        if (voice.name.includes("HoaiMy") && !voiceOptions[0].voice) {
+          voiceOptions[0].voice = voice; // Gán giọng nữ
+        } else if (
+          (voice.name.includes("Nam") || voice.name.includes("Minh")) &&
+          !voiceOptions[1].voice
+        ) {
+          voiceOptions[1].voice = voice; // Gán giọng nam
+        }
+      });
+
+      setVoices(voiceOptions);
+      if (voiceOptions[0].voice) {
+        setSelectedVoiceName("Giọng Nữ"); // Mặc định chọn giọng nữ nếu có
+      } else if (voiceOptions[1].voice) {
+        setSelectedVoiceName("Giọng Nam"); // Nếu không có nữ, chọn nam
+      }
+    };
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      window.speechSynthesis.onvoiceschanged = null;
+    };
+  }, [id]);
 
   useEffect(() => {
     const fetchStory = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const response = await axios.get("http://localhost:5000/api/story/1");
+        const response = await axios.get(
+          `http://localhost:5000/api/story/${id}`
+        );
         setStoryData(response.data);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu:", error);
+        if (parseInt(id) === 5)
+          setStoryData({
+            id: 5,
+            title: "Bài Học Vui: Bạn Thân",
+            text: "Ngày xưa, có hai bạn nhỏ là Tèo và Tí. Họ học cùng lớp và rất thân thiết. Một hôm, Tèo bị ốm, Tí đã mang sách vở đến giúp Tèo học. Họ cùng nhau làm bài tập và chơi đùa. Từ đó, họ hiểu rằng tình bạn thật quý giá và luôn cần trân trọng nhau.",
+            summaryExtract:
+              "Tèo và Tí là bạn thân, Tí giúp Tèo học khi ốm, nhấn mạnh tình bạn quý giá.",
+            summaryParaphrase:
+              "Tèo và Tí chơi thân. Khi Tèo ốm, Tí mang sách đến hỗ trợ và chơi cùng, giúp họ nhận ra giá trị của tình bạn."
+          });
+        else setError("Không thể tải truyện. Hãy thử lại nhé!");
       }
       setLoading(false);
     };
     fetchStory();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
-    localStorage.setItem("note", note);
-  }, [note]);
+    localStorage.setItem(`progress_${id}`, progress);
+  }, [progress]);
 
   const toggleTheme = () => {
     setIsDarkTheme((prev) => {
@@ -57,55 +135,57 @@ const DualViewLayout = () => {
 
   const handleShare = () => {
     if (navigator.share) {
-      navigator
-        .share({
-          title: "Truyện Cổ Tích: Cây Khế",
-          text: "Đọc và khám phá tóm tắt truyện Cây Khế!",
-          url: window.location.href
-        })
-        .catch((error) => console.log("Lỗi khi chia sẻ:", error));
+      navigator.share({
+        title: storyData.title || "Đọc truyện cùng bé",
+        text: `Khám phá truyện ${storyData.title || ""} nhé!`,
+        url: window.location.href
+      });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert("Đã sao chép liên kết để chia sẻ!");
+      alert("Đã sao chép đường dẫn để chia sẻ!");
     }
   };
 
-  const handleReadAloud = (text) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "vi-VN";
-    window.speechSynthesis.speak(utterance);
-  };
+  const handleReadAloud = useCallback(
+    (text) => {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "vi-VN";
+      utterance.volume = 1;
+      utterance.rate = 0.9;
+      utterance.pitch = 1.2;
+      const selectedVoice = voices.find(
+        (v) => v.name === selectedVoiceName
+      )?.voice;
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      }
+      window.speechSynthesis.speak(utterance);
+    },
+    [selectedVoiceName, voices]
+  );
 
-  const renderTextWithVocab = (text) => {
-    const vocab = { cáo: "Con vật thông minh", khế: "Loại cây có quả chua" };
-    return text.split(" ").map((word, index) =>
-      vocab[word] ? (
-        <span
-          key={index}
-          className={styles.vocab}
-          onClick={() => alert(vocab[word])}
-        >
-          {word}
-        </span>
-      ) : (
-        word + " "
-      )
-    );
-  };
+  const renderTextWithVocab = useCallback((text) => {
+    const vocab = { ốm: "Bị bệnh", quý: "Đáng giá" };
+    const words = text.split(" ");
+    return words.map((word, index) => (
+      <span
+        key={index}
+        className={`${styles.word} ${vocab[word] ? styles.vocab : ""}`}
+        onClick={() =>
+          vocab[word] && alert(`"${word}" nghĩa là: ${vocab[word]}`)
+        }
+      >
+        {word}{" "}
+      </span>
+    ));
+  }, []);
 
-  const handleImageClick = () => {
-    alert("Đây là cây khế trong truyện!");
-  };
-
-  const handleScroll = (e) => {
+  const handleScroll = useCallback((e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
     const percent = (scrollTop / (scrollHeight - clientHeight)) * 100;
     setProgress(Math.min(100, percent));
-  };
-
-  const handleQuizAnswer = (answer) => {
-    setQuizAnswer(answer === "Em trai" ? "Đúng" : "Sai");
-  };
+  }, []);
 
   return (
     <div
@@ -114,7 +194,7 @@ const DualViewLayout = () => {
       }`}
     >
       <Header />
-      <div className={styles.mainContainer}>
+      <motion.div className={styles.headerContainer}>
         {isMobile && (
           <div className={styles.tabContainer}>
             <button
@@ -123,7 +203,7 @@ const DualViewLayout = () => {
               }`}
               onClick={() => setActiveView("text")}
             >
-              Văn Bản
+              Truyện
             </button>
             <button
               className={`${styles.tab} ${
@@ -135,137 +215,177 @@ const DualViewLayout = () => {
             </button>
           </div>
         )}
-
-        <div className={styles.contentWrapper}>
+      </motion.div>
+      <div className={styles.contentWrapper}>
+        <motion.div
+          className={`${styles.panel} ${styles.textPanel} ${
+            isMobile && activeView !== "text" ? styles.hidden : ""
+          }`}
+          variants={pageVariants}
+          initial="hidden"
+          animate="visible"
+          onScroll={handleScroll}
+        >
           <div
-            className={`${styles.panel} ${styles.textPanel} ${
-              isMobile && activeView !== "text" ? styles.hidden : ""
-            }`}
-            onScroll={handleScroll}
-          >
-            <div
-              className={styles.progressBar}
-              style={{ width: `${progress}%` }}
-            ></div>
-            <h2>Truyện Cổ Tích: Cây Khế</h2>
-            <div className={styles.fontControl}>
-              <button
-                onClick={() => setFontSize((prev) => Math.max(12, prev - 2))}
-              >
-                A-
-              </button>
-              <button
-                onClick={() => setFontSize((prev) => Math.min(24, prev + 2))}
-              >
-                A+
-              </button>
-            </div>
-            <button
-              className={styles.readAloudButton}
-              onClick={() => handleReadAloud(storyData.text)}
+            className={styles.progressBar}
+            style={{ width: `${progress}%` }}
+          ></div>
+          <h2>{storyData.title || "Đang tải truyện..."}</h2>
+          {error && <p className={styles.error}>{error}</p>}
+          <div className={styles.toolbar}>
+            <motion.button
+              onClick={() => setFontSize((prev) => Math.max(14, prev - 2))}
+              whileHover={{ scale: 1.1 }}
+              title="Thu nhỏ chữ"
             >
-              🔊 Đọc to
-            </button>
+              <FaMinus />
+            </motion.button>
+            <motion.button
+              onClick={() => setFontSize((prev) => Math.min(24, prev + 2))}
+              whileHover={{ scale: 1.1 }}
+              title="Phóng to chữ"
+            >
+              <FaPlus />
+            </motion.button>
+            <motion.button
+              onClick={() => handleReadAloud(storyData.text)}
+              whileHover={{ scale: 1.1 }}
+              title="Nghe truyện"
+            >
+              <FaVolumeUp />
+            </motion.button>
+            {voices.length > 0 && (
+              <select
+                className={styles.voiceSelector}
+                value={selectedVoiceName}
+                onChange={(e) => setSelectedVoiceName(e.target.value)}
+              >
+                {voices.map((voice) => (
+                  <option key={voice.name} value={voice.name}>
+                    {voice.name}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+          <div className={styles.bookPage}>
             <div
-              className={styles.content}
+              className={styles.bookContent}
               style={{ fontSize: `${fontSize}px` }}
             >
               {loading
                 ? "Đang tải..."
-                : renderTextWithVocab(
-                    storyData.text ||
-                      "Đây là một câu truyện cổ tích về loài vật..."
-                  )}
-            </div>
-            <textarea
-              className={styles.note}
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Bé ghi chú gì về truyện này nào!"
-            />
-          </div>
-
-          <div
-            className={`${styles.panel} ${styles.summaryPanel} ${
-              isMobile && activeView !== "summary" ? styles.hidden : ""
-            }`}
-          >
-            <div className={styles.summaryHeader}>
-              <h2>Tóm Tắt</h2>
-              <div className={styles.methodSelector}>
-                <button
-                  className={`${styles.methodButton} ${
-                    summaryMethod === "extract" ? styles.active : ""
-                  }`}
-                  onClick={() => setSummaryMethod("extract")}
-                >
-                  Trích xuất
-                </button>
-                <button
-                  className={`${styles.methodButton} ${
-                    summaryMethod === "paraphrase" ? styles.active : ""
-                  }`}
-                  onClick={() => setSummaryMethod("paraphrase")}
-                >
-                  Diễn giải
-                </button>
-              </div>
+                : storyData.text
+                ? renderTextWithVocab(storyData.text)
+                : "Chưa có nội dung"}
             </div>
             <div className={styles.imageContainer}>
-              <img
+              <motion.img
                 src={summaryPicture}
-                alt="Summary"
+                alt="Hình minh họa"
                 className={styles.summaryImage}
-                onClick={handleImageClick}
+                onClick={() => setIsImageModalOpen(true)}
+                whileHover={{ scale: 1.05 }}
               />
-            </div>
-            <button
-              className={styles.readAloudButton}
-              onClick={() =>
-                handleReadAloud(
-                  summaryMethod === "extract"
-                    ? storyData.summaryExtract
-                    : storyData.summaryParaphrase
-                )
-              }
-            >
-              🔊 Đọc to
-            </button>
-            <div className={styles.content}>
-              {loading ? (
-                "Đang tải..."
-              ) : (
-                <p>
-                  <strong>Kết quả tóm tắt:</strong>
-                  <br />
-                  {summaryMethod === "extract"
-                    ? storyData.summaryExtract
-                    : storyData.summaryParaphrase}
-                </p>
-              )}
-            </div>
-            <div className={styles.quiz}>
-              <p>Cây khế trong truyện thuộc về ai?</p>
-              <button onClick={() => handleQuizAnswer("Anh trai")}>
-                Anh trai
-              </button>
-              <button onClick={() => handleQuizAnswer("Em trai")}>
-                Em trai
-              </button>
-              {quizAnswer && (
-                <p>{quizAnswer === "Đúng" ? "Giỏi lắm!" : "Thử lại nhé!"}</p>
-              )}
+              <p className={styles.imageCaption}>Hình minh họa câu chuyện</p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <button className={styles.themeButton} onClick={toggleTheme}>
-          {isDarkTheme ? <FaSun /> : <FaMoon />}
-        </button>
-        <button className={styles.shareButton} onClick={handleShare}>
-          <FaShareAlt />
-        </button>
+        <motion.div
+          className={`${styles.panel} ${styles.summaryPanel} ${
+            isMobile && activeView !== "summary" ? styles.hidden : ""
+          }`}
+          variants={pageVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <h2>Tóm Tắt Vui</h2>
+          <div className={styles.methodSelector}>
+            <motion.button
+              className={`${styles.methodButton} ${
+                summaryMethod === "extract" ? styles.active : ""
+              }`}
+              onClick={() => setSummaryMethod("extract")}
+              whileHover={{ scale: 1.05 }}
+            >
+              <FaStar /> Trích Xuất
+            </motion.button>
+            <motion.button
+              className={`${styles.methodButton} ${
+                summaryMethod === "paraphrase" ? styles.active : ""
+              }`}
+              onClick={() => setSummaryMethod("paraphrase")}
+              whileHover={{ scale: 1.05 }}
+            >
+              <FaPen /> Diễn Giải
+            </motion.button>
+          </div>
+          <div className={styles.summaryContent}>
+            {summaryMethod === "extract" ? (
+              <div className={styles.summaryExtractBox}>
+                <p>{loading ? "Đang tải..." : storyData.summaryExtract}</p>
+                <motion.button
+                  onClick={() => handleReadAloud(storyData.summaryExtract)}
+                  whileHover={{ scale: 1.1 }}
+                  title="Nghe tóm tắt"
+                >
+                  <FaVolumeUp />
+                </motion.button>
+              </div>
+            ) : (
+              <div className={styles.summaryParaphraseBox}>
+                <p>{loading ? "Đang tải..." : storyData.summaryParaphrase}</p>
+                <motion.button
+                  onClick={() => handleReadAloud(storyData.summaryParaphrase)}
+                  whileHover={{ scale: 1.1 }}
+                  title="Nghe tóm tắt"
+                >
+                  <FaVolumeUp />
+                </motion.button>
+              </div>
+            )}
+          </div>
+        </motion.div>
       </div>
+      <motion.button
+        className={styles.themeButton}
+        onClick={toggleTheme}
+        whileHover={{ scale: 1.1 }}
+        title={isDarkTheme ? "Chuyển sang sáng" : "Chuyển sang tối"}
+      >
+        {isDarkTheme ? <FaSun /> : <FaMoon />}
+      </motion.button>
+      <motion.button
+        className={styles.shareButton}
+        onClick={handleShare}
+        whileHover={{ scale: 1.1 }}
+        title="Chia sẻ truyện"
+      >
+        <FaShareAlt />
+      </motion.button>
+      <Modal
+        isOpen={isImageModalOpen}
+        onRequestClose={() => setIsImageModalOpen(false)}
+        className={styles.imageModal}
+        overlayClassName={styles.imageModalOverlay}
+      >
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <button
+            className={styles.closeModalTop}
+            onClick={() => setIsImageModalOpen(false)}
+            title="Đóng"
+          >
+            <FaTimes />
+          </button>
+          <img
+            src={summaryPicture}
+            alt="Hình minh họa"
+            className={styles.enlargedImage}
+          />
+          <p className={styles.imageCaption}>Hình minh họa câu chuyện</p>
+        </motion.div>
+      </Modal>
     </div>
   );
 };

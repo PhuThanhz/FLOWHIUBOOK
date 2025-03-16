@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import styles from "../styles/HomeScreen.module.css";
 import SummaryCarousel from "../components/SummaryCarousel";
@@ -14,7 +15,9 @@ import {
   FaStar,
   FaMoon,
   FaSun,
-  FaShareAlt
+  FaShareAlt,
+  FaArrowRight,
+  FaTimes
 } from "react-icons/fa";
 
 // Import ảnh minh họa cho từng lớp
@@ -145,14 +148,43 @@ const guideMessages = [
   "Chú cá voi chờ bé tóm tắt sách nè! 🖋️"
 ];
 
+// Dữ liệu các bước hướng dẫn
+const guideSteps = [
+  {
+    step: 1,
+    message: "Chào bé! Chú cá voi sẽ giúp bé nhé! 😊",
+    icon: "🐳"
+  },
+  {
+    step: 2,
+    message: "Bé nhấn nút 'Khám phá ngay' để tìm sách nha! 🔍",
+    icon: "🔍"
+  },
+  {
+    step: 3,
+    message: "Chọn lớp của bé ở đây này! 🐾",
+    icon: "🐾"
+  },
+  {
+    step: 4,
+    message: "Nhấn 'Bắt đầu tóm tắt nào!' để tóm tắt sách nha! ✍️",
+    icon: "✍️"
+  },
+  {
+    step: 5,
+    message: "Bé giỏi lắm! Cùng đọc sách vui nhé! 📚🎉",
+    icon: "📚"
+  }
+];
+
 function getRandomMessage() {
   return guideMessages[Math.floor(Math.random() * guideMessages.length)];
 }
 
 const HomeScreen = () => {
+  const navigate = useNavigate();
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [summary, setSummary] = useState("");
-  const [selectedClass, setSelectedClass] = useState(null);
   const [showGuide, setShowGuide] = useState(true);
   const [guideMessage, setGuideMessage] = useState(getRandomMessage());
   const [whalePosition, setWhalePosition] = useState(20);
@@ -161,6 +193,17 @@ const HomeScreen = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [playMusic, setPlayMusic] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [showGuideSteps, setShowGuideSteps] = useState(true);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  // Kiểm tra xem hướng dẫn đã được hiển thị chưa
+  useEffect(() => {
+    const hasSeenGuide = localStorage.getItem("hasSeenGuide");
+    if (hasSeenGuide) {
+      setShowGuideSteps(false);
+    }
+  }, []);
 
   useEffect(() => {
     const moveWhale = setInterval(() => {
@@ -176,23 +219,23 @@ const HomeScreen = () => {
   };
 
   const handleSummarizeClick = () => {
-    const randomItem =
-      sampleSummaries[Math.floor(Math.random() * sampleSummaries.length)];
-    setSummary(
-      `Tóm tắt "${randomItem.title}": Một câu chuyện/bài học thú vị cho bé!`
-    );
-    setGuideMessage("Tuyệt vời! Chú cá voi vỗ tay cho bé nè! 👏");
+    navigate("/create-summary");
+    setGuideMessage("Bé giỏi lắm! Chú cá voi chờ bé tóm tắt nè! 🐳");
     setShowGuide(true);
   };
 
   const handleClassClick = (classId) => {
-    setSelectedClass(classId);
-    setGuideMessage(
-      `Bé chọn ${
-        classLevels.find((level) => level.id === classId).name
-      } rồi! Chú cá voi khen bé giỏi! 🐳`
-    );
-    setShowGuide(true);
+    const newSelectedClass = selectedClass === classId ? null : classId;
+    setSelectedClass(newSelectedClass);
+    if (newSelectedClass) {
+      navigate(`/reading-list/${classId}`);
+      setGuideMessage(
+        `Bé chọn ${
+          classLevels.find((level) => level.id === classId).name
+        } rồi! Chú cá voi khen bé giỏi! 🐳`
+      );
+      setShowGuide(true);
+    }
   };
 
   const handleCloseModal = () => setIsSearchModalOpen(false);
@@ -224,9 +267,19 @@ const HomeScreen = () => {
     }
   };
 
-  const filteredSummaries = selectedClass
-    ? sampleSummaries.filter((item) => item.classLevel === selectedClass)
-    : sampleSummaries;
+  const handleNextStep = () => {
+    if (currentStep < guideSteps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      setShowGuideSteps(false);
+      localStorage.setItem("hasSeenGuide", "true");
+    }
+  };
+
+  const handleSkipGuide = () => {
+    setShowGuideSteps(false);
+    localStorage.setItem("hasSeenGuide", "true");
+  };
 
   return (
     <div
@@ -234,7 +287,33 @@ const HomeScreen = () => {
     >
       <Header />
       <main className={styles.mainContent}>
-        {/* Hero Section */}
+        {showGuideSteps && (
+          <div className={styles.guideStepsContainer}>
+            <div className={styles.guideStep}>
+              <div className={styles.guideStepContent}>
+                <Lottie
+                  animationData={whaleAnimation}
+                  className={styles.guideStepCharacter}
+                />
+                <div className={styles.guideStepMessage}>
+                  <span className={styles.guideStepIcon}>
+                    {guideSteps[currentStep].icon}
+                  </span>
+                  <p>{guideSteps[currentStep].message}</p>
+                </div>
+              </div>
+              <div className={styles.guideStepButtons}>
+                <button className={styles.skipButton} onClick={handleSkipGuide}>
+                  Bỏ qua <FaTimes />
+                </button>
+                <button className={styles.nextButton} onClick={handleNextStep}>
+                  Tiếp theo <FaArrowRight />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <section className={styles.heroSection}>
           <div className={styles.heroContent}>
             <h2 className={styles.sectionTitle}>
@@ -243,16 +322,18 @@ const HomeScreen = () => {
             </h2>
             <div className={styles.buttonContainer}>
               <button
-                className={styles.exploreButton}
+                className={`${styles.exploreButton} ${
+                  isSearchModalOpen ? styles.active : ""
+                }`}
                 onClick={handleSearchClick}
               >
                 <FaSearch className={styles.buttonIcon} /> Khám phá ngay
               </button>
               <button
-                className={styles.summaryButton}
+                className={`${styles.summaryButton}`}
                 onClick={handleSummarizeClick}
               >
-                <FaPen className={styles.buttonIcon} /> Tóm tắt tức thì
+                <FaPen className={styles.buttonIcon} /> Bắt đầu tóm tắt nào!
               </button>
             </div>
             {summary && <p className={styles.summaryText}>{summary}</p>}
@@ -284,22 +365,7 @@ const HomeScreen = () => {
           </div>
         </section>
 
-        {/* Nút bật/tắt nhạc nền */}
-        <button
-          className={`${styles.musicButton} ${playMusic ? styles.playing : ""}`}
-          onClick={toggleMusic}
-        >
-          <img src={musicIcon} alt="Music" className={styles.musicIcon} />
-        </button>
-        <SafeReactHowler
-          src="/audio/nhacplaytogether.mp3"
-          playing={playMusic}
-          loop={true}
-          volume={0.5}
-        />
-
-        {/* Nhân vật hướng dẫn (Chú cá voi) */}
-        {showGuide && (
+        {showGuide && !showGuideSteps && (
           <div
             className={styles.guideContainer}
             style={{ right: `${whalePosition}px` }}
@@ -332,7 +398,6 @@ const HomeScreen = () => {
           </div>
         )}
 
-        {/* Class Levels Section */}
         <h2 className={styles.sectionTitle}>Chọn lớp của bé</h2>
         <section className={styles.classSection}>
           <div className={styles.classList}>
@@ -342,7 +407,7 @@ const HomeScreen = () => {
                   key={level.id}
                   className={`${styles.classItem} ${
                     styles[`class${level.id}`]
-                  } ${selectedClass === level.id ? styles.selected : ""}`}
+                  } ${selectedClass === level.id ? styles.active : ""}`}
                   onClick={() => handleClassClick(level.id)}
                 >
                   <div className={styles.classIconWrapper}>
@@ -362,7 +427,7 @@ const HomeScreen = () => {
                   key={level.id}
                   className={`${styles.classItem} ${
                     styles[`class${level.id}`]
-                  } ${selectedClass === level.id ? styles.selected : ""}`}
+                  } ${selectedClass === level.id ? styles.active : ""}`}
                   onClick={() => handleClassClick(level.id)}
                 >
                   <div className={styles.classIconWrapper}>
@@ -379,15 +444,13 @@ const HomeScreen = () => {
           </div>
         </section>
 
-        {/* Carousel Section */}
         <h2 className={styles.sectionTitle}>
           <FaStar className={styles.sectionIcon} /> Bài đọc nổi bật
         </h2>
         <section className={styles.carouselSection}>
-          <SummaryCarousel title="" items={filteredSummaries} />
+          <SummaryCarousel title="" items={sampleSummaries} />
         </section>
 
-        {/* Section: Mẹo đọc sách hay */}
         <h2 className={styles.sectionTitle}>
           <FaBook className={styles.sectionIcon} /> Mẹo đọc sách hay
         </h2>
@@ -403,7 +466,6 @@ const HomeScreen = () => {
           </div>
         </section>
 
-        {/* Search Modal */}
         <SearchModal isOpen={isSearchModalOpen} onClose={handleCloseModal} />
       </main>
     </div>
